@@ -1,0 +1,446 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>次回来局日計算機</title>
+
+
+<style>
+
+  button {
+    padding: 12px 18px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+  }
+
+  
+button.selected {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+
+#custom-days.selected {
+  background-color: #e0e0e0;
+  border: 2px solid #888;
+}
+
+
+#result-date {
+  font-family: monospace;
+  font-size: 48px;
+  font-weight: normal;
+  margin: 24px 0;
+  text-align: center;
+}
+
+
+body {
+  font-family: monospace;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #292D2A;
+}
+
+
+button,
+input {
+  font-family: inherit;
+}
+
+
+#days-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+
+#days-buttons button {
+  min-height: 52px;
+  padding: 10px;
+}
+
+
+#visit-date {
+  font-size: 16px;
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-top: 12px;
+  width: 100%;
+}
+
+
+.custom-days-area {
+  margin-top: 20px;
+}
+
+.custom-days-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+
+#custom-days {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+
+#custom-days-ok {
+  width: 72px;
+  min-height: 48px;
+}
+
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 28px 0;
+}
+
+
+#reset-button {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 20px;
+}
+
+
+h1 {
+  text-align: center;
+  letter-spacing: 2px;
+  font-weight: normal;
+  margin-bottom: 36px;
+}
+
+
+#today-button,
+#yesterday-button {
+  border-color: #B8C9BC;
+}
+
+#today-button.selected,
+#yesterday-button.selected {
+  background-color: #DCE7DF;
+  color: #292D2A;
+}
+
+
+#days-buttons button {
+  border-color: #BCCBD6;
+}
+
+#days-buttons button.selected {
+  background-color: #DCE5ED;
+  color: #292D2A;
+}
+
+
+#reset-button {
+  background-color: #E7E0D5;
+  border-color: #CFC5B7;
+  color: #292D2A;
+}
+
+
+label[for="visit-date"] {
+  display: block;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+
+h2 {
+  font-weight: normal;
+  text-align: center;
+}
+
+
+#date-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+
+label[for="custom-days"] {
+  display: block;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+
+#selected-days-text {
+  text-align: center;
+}
+
+
+#result-detail {
+  text-align: center;
+}
+
+</style>
+
+</head>
+<body>
+
+  <h1>次回来局日計算機</h1>
+ 
+
+<label for="visit-date">今回の来局日</label>
+
+<div id="date-buttons">
+  <button id="today-button">今日</button>
+  <button id="yesterday-button">昨日</button>
+</div>
+
+<input type="date" id="visit-date">
+
+
+<h2>処方日数</h2>
+
+<div id="days-buttons">
+  <button>14日</button>
+  <button>28日</button>
+  <button>30日</button>
+  <button>35日</button>
+  <button>40日</button>
+  <button>42日</button>
+  <button>56日</button>
+  <button>60日</button>
+  <button>62日</button>
+  <button>90日</button>
+  <button>120日</button>
+</div>
+
+
+
+<div class="custom-days-area">
+  <label for="custom-days">その他の日数</label>
+  <div class="custom-days-row">
+    <input type="number" id="custom-days" min="1" placeholder="日数を入力">
+    <button id="custom-days-ok">OK</button>
+  </div>
+</div>
+
+
+<p id="selected-days-text">処方日数を選んでね</p>
+
+<hr>
+<h2>次回来局の目安</h2>
+<p id="result-date">— / —</p>
+<p id="result-detail">日数を選ぶと結果が表示されます</p>
+
+
+<button id="reset-button">次の計算</button>
+
+
+
+<script>
+
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  const today = new Date();
+
+document.getElementById("today-button").classList.add("selected");
+
+
+
+const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+document.getElementById("today-button").textContent =
+  `今日 ${today.getMonth() + 1}/${today.getDate()}（${weekdays[today.getDay()]}）`;
+
+
+const yesterdayForButton = new Date();
+yesterdayForButton.setDate(yesterdayForButton.getDate() - 1);
+
+
+document.getElementById("yesterday-button").textContent =
+  `昨日 ${yesterdayForButton.getMonth() + 1}/${yesterdayForButton.getDate()}（${weekdays[yesterdayForButton.getDay()]}）`;
+
+
+  document.getElementById("visit-date").value = formatDate(today);
+
+ 
+document.getElementById("today-button").addEventListener("click", function() {
+  document.getElementById("visit-date").value = formatDate(new Date());
+
+  document.getElementById("today-button").classList.add("selected");
+  document.getElementById("yesterday-button").classList.remove("selected");
+
+calculateNextDate();
+});
+
+
+ 
+document.getElementById("yesterday-button").addEventListener("click", function() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  document.getElementById("visit-date").value = formatDate(yesterday);
+
+  document.getElementById("yesterday-button").classList.add("selected");
+  document.getElementById("today-button").classList.remove("selected");
+
+calculateNextDate();
+});
+
+
+document.getElementById("visit-date").addEventListener("change", function() {
+  document.getElementById("today-button").classList.remove("selected");
+  document.getElementById("yesterday-button").classList.remove("selected");
+
+calculateNextDate();
+});
+
+
+function calculateNextDate() {
+  const visitDateText = document.getElementById("visit-date").value;
+
+  
+if (!visitDateText || selectedDays === null) {
+  document.getElementById("result-date").textContent = "— / —";
+  document.getElementById("result-detail").textContent =
+    "日付と日数を選んでね";
+  return;
+}
+
+
+  const [year, month, day] = visitDateText.split("-").map(Number);
+
+  const nextDate = new Date(year, month - 1, day);
+  nextDate.setDate(nextDate.getDate() + selectedDays);
+
+  document.getElementById("result-date").textContent =
+    `${nextDate.getMonth() + 1}/${nextDate.getDate()}`;
+
+  document.getElementById("result-detail").textContent =
+    `${nextDate.getFullYear()}年${nextDate.getMonth() + 1}月${nextDate.getDate()}日（${weekdays[nextDate.getDay()]}）`;
+}
+
+let selectedDays = null;
+
+const daysButtons = document.querySelectorAll("#days-buttons button");
+
+daysButtons.forEach(function(button) {
+  button.addEventListener("click", function() {
+
+    daysButtons.forEach(function(b) {
+      b.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+document.getElementById("custom-days").classList.remove("selected");
+document.getElementById("custom-days").value = "";
+
+selectedDays = parseInt(button.textContent, 10);
+ document.getElementById("selected-days-text").textContent =
+  `${selectedDays}日分で計算`;
+calculateNextDate();
+ });
+});
+
+
+document.getElementById("custom-days-ok").addEventListener("click", function() {
+const input = document.getElementById("custom-days");
+  const days = Number(input.value);
+
+  if (!Number.isInteger(days) || days < 1 || input.value.trim() === "") {
+    alert("1以上の整数を入力してね");
+    return;
+  }
+
+  selectedDays = days;
+input.classList.add("selected");
+
+  daysButtons.forEach(function(button) {
+    button.classList.remove("selected");
+  });
+
+  document.getElementById("selected-days-text").textContent =
+    `${selectedDays}日分で計算`;
+
+  calculateNextDate();
+  input.blur();
+});
+
+
+document.getElementById("reset-button").addEventListener("click", function() {
+  selectedDays = null;
+
+  daysButtons.forEach(function(button) {
+    button.classList.remove("selected");
+  });
+
+  const customInput = document.getElementById("custom-days");
+  customInput.value = "";
+  customInput.classList.remove("selected");
+
+  document.getElementById("selected-days-text").textContent =
+    "処方日数を選んでね";
+
+  document.getElementById("result-date").textContent = "— / —";
+  document.getElementById("result-detail").textContent =
+    "日数を選ぶと結果が表示されます";
+});
+
+
+document.getElementById("custom-days").addEventListener("input", function() {
+  this.classList.remove("selected");
+
+  selectedDays = null;
+
+  daysButtons.forEach(function(button) {
+    button.classList.remove("selected");
+  });
+
+  document.getElementById("selected-days-text").textContent =
+    "OKを押して日数を確定してね";
+
+  document.getElementById("result-date").textContent = "— / —";
+  document.getElementById("result-detail").textContent =
+    "日数を確定すると結果が表示されます";
+});
+
+
+
+document.getElementById("custom-days").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    
+    document.getElementById("custom-days-ok").click();
+  }
+});
+
+
+</script>
+
+
+
+</body>
+</html>
