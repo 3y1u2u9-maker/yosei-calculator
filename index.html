@@ -31,8 +31,8 @@ button.selected {
 
 
 #custom-days.selected {
-  background-color: #e0e0e0;
-  border: 2px solid #888;
+  background-color: #DCE5ED;
+  border: 1px solid #BCCBD6;
 }
 
 
@@ -436,6 +436,13 @@ document.getElementById("result-conditions").style.display = "grid";
 
 }
 
+function scrollToResult() {
+  document.getElementById("result-date").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
 let selectedDays = null;
 
 const daysButtons = document.querySelectorAll("#days-buttons button");
@@ -456,6 +463,11 @@ selectedDays = parseInt(button.textContent, 10);
  document.getElementById("selected-days-text").textContent =
   `${selectedDays}日分で計算`;
 calculateNextDate();
+
+setTimeout(function() {
+  scrollToResult();
+}, 600);
+
  });
 });
 
@@ -481,6 +493,7 @@ input.classList.add("selected");
 
   calculateNextDate();
   input.blur();
+  scrollToResult();
 });
 
 
@@ -489,6 +502,9 @@ document.getElementById("reset-button").addEventListener("click", function() {
 
   daysButtons.forEach(function(button) {
     button.classList.remove("selected");
+   
+window.scrollTo(0, 0);
+
   });
 
   const customInput = document.getElementById("custom-days");
