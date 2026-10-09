@@ -48,7 +48,7 @@ body {
   max-width: 480px;
   margin: 0 auto;
   padding: 20px;
-  color: #303D35;
+  color: #405448;
 }
 
 
@@ -62,6 +62,7 @@ input {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+  margin-bottom: 32px;
 }
 
 
@@ -96,13 +97,13 @@ label[for="custom-days"] {
 
 
 .custom-days-area {
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .custom-days-row {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 0;
 }
 
 
@@ -126,7 +127,7 @@ label[for="custom-days"] {
 hr {
   border: none;
   border-top: 1px solid #ddd;
-  margin: 28px 0;
+  margin: 20px 0;
 }
 
 
@@ -141,7 +142,7 @@ h1 {
   text-align: center;
   letter-spacing: 2px;
   font-weight: normal;
-  margin-bottom: 36px;
+  margin-bottom: 56px;
 }
 
 
@@ -153,7 +154,7 @@ h1 {
 #today-button.selected,
 #yesterday-button.selected {
   background-color: #DCE7DF;
-  color: color: #303D35;
+  color: #405448;
 }
 
 #today-button,
@@ -176,21 +177,21 @@ h1 {
 
 #days-buttons button.selected {
   background-color: #DCE5ED;
-  color: color: #303D35;
+  color: #405448;
 }
 
 
 #reset-button {
   background-color: #E7E0D5;
   border-color: #CFC5B7;
-  color: color: #303D35;
+  color: #405448;
   font-size: 16px;
 }
 
 
 label[for="visit-date"] {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -198,6 +199,9 @@ label[for="visit-date"] {
 h2 {
   font-weight: normal;
   text-align: center;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 
@@ -211,7 +215,7 @@ h2 {
 label[for="custom-days"] {
   display: block;
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 
@@ -230,6 +234,7 @@ label[for="custom-days"] {
   text-align: center;
   color: #858C87;
   font-size: 18px;
+  margin: 24px 0;
 }
 
 #result-conditions {
@@ -254,7 +259,8 @@ label[for="custom-days"] {
 
 button,
 input {
-  color: color: #303D35;
+  color: #405448;
+  -webkit-text-fill-color: #405448;
 }
 
 </style>
