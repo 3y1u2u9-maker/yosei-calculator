@@ -20,6 +20,7 @@
     cursor: pointer;
   }
 
+
   
 button.selected {
   background-color: #e0e0e0;
@@ -47,7 +48,7 @@ body {
   max-width: 480px;
   margin: 0 auto;
   padding: 20px;
-  color: #292D2A;
+  color: #303D35;
 }
 
 
@@ -65,8 +66,9 @@ input {
 
 
 #days-buttons button {
-  min-height: 52px;
+  min-height: 72px;
   padding: 10px;
+  font-size: 20px;
 }
 
 
@@ -79,6 +81,17 @@ input {
   max-width: 100%;
   margin-top: 12px;
   width: 100%;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  -webkit-appearance: none;
+}
+
+label[for="visit-date"] {
+  font-size: 18px;
+}
+
+label[for="custom-days"] {
+  font-size: 18px;
 }
 
 
@@ -140,7 +153,20 @@ h1 {
 #today-button.selected,
 #yesterday-button.selected {
   background-color: #DCE7DF;
-  color: #292D2A;
+  color: color: #303D35;
+}
+
+#today-button,
+#yesterday-button {
+  font-size: 18px;
+  min-height: 56px;
+}
+
+.button-date {
+  display: inline-block;
+  white-space: nowrap;
+  margin-top: 6px;
+  font-size: 16px;
 }
 
 
@@ -150,14 +176,14 @@ h1 {
 
 #days-buttons button.selected {
   background-color: #DCE5ED;
-  color: #292D2A;
+  color: color: #303D35;
 }
 
 
 #reset-button {
   background-color: #E7E0D5;
   border-color: #CFC5B7;
-  color: #292D2A;
+  color: color: #303D35;
   font-size: 16px;
 }
 
@@ -196,12 +222,39 @@ label[for="custom-days"] {
 
 #result-detail {
   text-align: center;
+  color: #858C87;
+  font-size: 18px;
+}
+
+#selected-days-text {
+  text-align: center;
+  color: #858C87;
+  font-size: 18px;
+}
+
+#result-conditions {
+  display: none;
+  grid-template-columns: max-content max-content max-content;
+  column-gap: 6px;
+  row-gap: 6px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+#result-conditions span:nth-child(3n + 1) {
+  text-align: right;
+}
+
+#result-conditions span:nth-child(3n + 3) {
+  text-align: left;
 }
 
 
 button,
 input {
-  color: #292D2A;
+  color: color: #303D35;
 }
 
 </style>
@@ -253,8 +306,18 @@ input {
 
 <hr>
 <h2>次回来局の目安</h2>
+
 <p id="result-date">— / —</p>
 <p id="result-detail">日数を選ぶと結果が表示されます</p>
+<div id="result-conditions">
+  <span>今回の来局日</span>
+  <span>：</span>
+  <span id="condition-date"></span>
+
+  <span>処方日数</span>
+  <span>：</span>
+  <span id="condition-days"></span>
+</div>
 
 
 <button id="reset-button">次の計算</button>
@@ -279,16 +342,16 @@ document.getElementById("today-button").classList.add("selected");
 
 const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
 
-document.getElementById("today-button").textContent =
-  `今日 ${today.getMonth() + 1}/${today.getDate()}（${weekdays[today.getDay()]}）`;
+document.getElementById("today-button").innerHTML =
+  `今日<br><span class="button-date">${today.getMonth() + 1}/${today.getDate()}（${weekdays[today.getDay()]}）</span>`;
 
 
 const yesterdayForButton = new Date();
 yesterdayForButton.setDate(yesterdayForButton.getDate() - 1);
 
 
-document.getElementById("yesterday-button").textContent =
-  `昨日 ${yesterdayForButton.getMonth() + 1}/${yesterdayForButton.getDate()}（${weekdays[yesterdayForButton.getDay()]}）`;
+document.getElementById("yesterday-button").innerHTML =
+  `昨日<br><span class="button-date">${yesterdayForButton.getMonth() + 1}/${yesterdayForButton.getDate()}（${weekdays[yesterdayForButton.getDay()]}）</span>`;
 
 
   document.getElementById("visit-date").value = formatDate(today);
@@ -334,6 +397,11 @@ if (!visitDateText || selectedDays === null) {
   document.getElementById("result-date").textContent = "— / —";
   document.getElementById("result-detail").textContent =
     "日付と日数を選んでね";
+
+  document.getElementById("condition-date").textContent = "";
+  document.getElementById("condition-days").textContent = "";
+  document.getElementById("result-conditions").style.display = "none";
+
   return;
 }
 
@@ -348,6 +416,15 @@ if (!visitDateText || selectedDays === null) {
 
   document.getElementById("result-detail").textContent =
     `${nextDate.getFullYear()}年${nextDate.getMonth() + 1}月${nextDate.getDate()}日（${weekdays[nextDate.getDay()]}）`;
+
+document.getElementById("condition-date").textContent =
+  `${month}月${day}日（${weekdays[new Date(year, month - 1, day).getDay()]}）`;
+
+document.getElementById("condition-days").textContent =
+  `${selectedDays}日分`;
+
+document.getElementById("result-conditions").style.display = "grid";
+
 }
 
 let selectedDays = null;
@@ -415,6 +492,11 @@ document.getElementById("reset-button").addEventListener("click", function() {
   document.getElementById("result-date").textContent = "— / —";
   document.getElementById("result-detail").textContent =
     "日数を選ぶと結果が表示されます";
+
+document.getElementById("condition-date").textContent = "";
+document.getElementById("condition-days").textContent = "";
+document.getElementById("result-conditions").style.display = "none";
+
 });
 
 
