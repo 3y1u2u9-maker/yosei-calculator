@@ -7,6 +7,8 @@
 <head>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
+<meta name="apple-mobile-web-app-title" content="来局日計算">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>次回来局日計算機</title>
@@ -46,7 +48,7 @@ button.selected {
 
 
 body {
-  font-family: monospace;
+  font-family: sans-serif;
   max-width: 480px;
   margin: 0 auto;
   padding: 20px;
@@ -78,7 +80,7 @@ input {
 #visit-date {
   font-size: 16px;
   padding: 12px;
-  border: 1px solid #aaa;
+  border: 1px solid #B8C9BC;
   border-radius: 8px;
   box-sizing: border-box;
   max-width: 100%;
@@ -114,7 +116,7 @@ label[for="custom-days"] {
   min-width: 0;
   padding: 12px;
   font-size: 16px;
-  border: 1px solid #aaa;
+  border: 1px solid #BCCBD6;
   border-radius: 8px;
   box-sizing: border-box;
 }
@@ -124,12 +126,13 @@ label[for="custom-days"] {
   width: 72px;
   min-height: 48px;
   font-size: 16px;
+  border: 1px solid #BCCBD6;
 }
 
 
 hr {
   border: none;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #CFC5B7;
   margin: 20px 0;
 }
 
@@ -152,6 +155,7 @@ h1 {
 #today-button,
 #yesterday-button {
   border-color: #B8C9BC;
+  text-align: center;
 }
 
 #today-button.selected,
@@ -164,10 +168,14 @@ h1 {
 #yesterday-button {
   font-size: 18px;
   min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .button-date {
-  display: inline-block;
+  display: block;
   white-space: nowrap;
   margin-top: 6px;
   font-size: 16px;
@@ -224,12 +232,13 @@ label[for="custom-days"] {
 
 #selected-days-text {
   text-align: center;
+  color: #82988A;
 }
 
 
 #result-detail {
   text-align: center;
-  color: #858C87;
+  color: #82988A;
   font-size: 18px;
 }
 
@@ -352,7 +361,7 @@ document.getElementById("today-button").classList.add("selected");
 const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
 
 document.getElementById("today-button").innerHTML =
-  `今日<br><span class="button-date">${today.getMonth() + 1}/${today.getDate()}（${weekdays[today.getDay()]}）</span>`;
+  `今日<br><span class="button-date">${today.getMonth() + 1}/${today.getDate()} (${weekdays[today.getDay()]})</span>`;
 
 
 const yesterdayForButton = new Date();
@@ -360,7 +369,7 @@ yesterdayForButton.setDate(yesterdayForButton.getDate() - 1);
 
 
 document.getElementById("yesterday-button").innerHTML =
-  `昨日<br><span class="button-date">${yesterdayForButton.getMonth() + 1}/${yesterdayForButton.getDate()}（${weekdays[yesterdayForButton.getDay()]}）</span>`;
+  `昨日<br><span class="button-date">${yesterdayForButton.getMonth() + 1}/${yesterdayForButton.getDate()} (${weekdays[yesterdayForButton.getDay()]})</span>`;
 
 
   document.getElementById("visit-date").value = formatDate(today);
@@ -423,11 +432,11 @@ if (!visitDateText || selectedDays === null) {
   document.getElementById("result-date").textContent =
     `${nextDate.getMonth() + 1}/${nextDate.getDate()}`;
 
-  document.getElementById("result-detail").textContent =
-    `${nextDate.getFullYear()}年${nextDate.getMonth() + 1}月${nextDate.getDate()}日（${weekdays[nextDate.getDay()]}）`;
+ document.getElementById("result-detail").textContent =
+  `${nextDate.getFullYear()}年${nextDate.getMonth() + 1}月${nextDate.getDate()}日(${weekdays[nextDate.getDay()]})`;
 
 document.getElementById("condition-date").textContent =
-  `${month}月${day}日（${weekdays[new Date(year, month - 1, day).getDay()]}）`;
+  `${month}月${day}日(${weekdays[new Date(year, month - 1, day).getDay()]})`;
 
 document.getElementById("condition-days").textContent =
   `${selectedDays}日分`;
